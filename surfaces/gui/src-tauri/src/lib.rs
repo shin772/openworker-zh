@@ -425,7 +425,7 @@ async fn download_dictation_model(
 ) -> Result<VoiceInputStatus, String> {
     let dictation = state.inner().clone();
     tauri::async_runtime::spawn_blocking(move || {
-        dictation.install_default_model_with_progress(|progress: DownloadProgress| {
+        dictation.install_default_model_with_progress(move |progress: DownloadProgress| {
             let _ = app.emit("dictation-download-progress", progress);
         })?;
         Ok::<VoiceInputStatus, String>(voice_input_status(&dictation))
