@@ -80,9 +80,16 @@ if (typeof document !== 'undefined') {
     scheduleInit();
   }
 
-  // 监听后续 DOM 变化
+  // 监听后续 DOM 变化（含 characterData 以捕获 React 重渲染）
   const observer = new MutationObserver((mutations) => {
     for (const m of mutations) {
+      if (m.type === 'characterData') {
+        // React 异步重渲染后文本节点内容被直接替换
+        if (m.target.nodeType === Node.TEXT_NODE) {
+          translateNode(m.target as Text);
+        }
+        continue;
+      }
       m.addedNodes.forEach((node) => {
         if (node.nodeType === Node.ELEMENT_NODE) {
           walkAndTranslate(node);
@@ -100,13 +107,13 @@ if (typeof document !== 'undefined') {
     childList: true,
     subtree: true,
     attributes: true,
+    characterData: true,
     attributeFilter: ['placeholder', 'aria-label', 'title'],
   });
 
-  // 兜底轮询：React 异步/重渲染会以 characterData 更新已有文本节点，
-  // MutationObserver 观察不到（无 characterData 监听），用轮询补漏。
+  // 兜底轮询：处理 observer 启动前的短暂窗口
   let polls = 0;
-  const MAX_POLLS = 20;
+  const MAX_POLLS = 40;
   const pollTimer = setInterval(() => {
     walkAndTranslate(document.body);
     polls += 1;
