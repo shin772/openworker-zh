@@ -684,7 +684,7 @@ pub fn run() {
             app.manage(PendingUpdate(Mutex::new(None)));
             // Voice recordings are transient; only the explicitly installed local Whisper model
             // lives in the existing application state directory.
-            app.manage(Arc::new(Dictation::new(state_dir().join("models"))));
+            app.manage(Arc::new(Dictation::new()));
 
             // 2. Build the window, injecting the sidecar endpoints before the SPA loads.
             //    Overlay title bar (macOS): traffic lights float over the edge-to-edge UI.

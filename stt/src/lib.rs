@@ -1,7 +1,8 @@
-// STT stub – 移除 whisper-rs 依赖，保留公开 API 签名
-// 所有方法返回 "not available" 状态，编译无需 CMake/LLVM
+// STT stub – 移除 whisper-rs 依赖，保留完整公开 API
+// 所有方法使用 &self（内部 Mutex），编译无需 CMake/LLVM
 
 use serde::{Deserialize, Serialize};
+use std::sync::Mutex;
 
 pub const DEFAULT_MODEL_FILE: &str = "ggml-base.en.bin";
 pub const DEFAULT_MODEL_URL: &str = "";
@@ -13,6 +14,13 @@ pub struct DictationStatus {
     pub is_listening: bool,
     pub is_downloading: bool,
     pub error: Option<String>,
+    pub recording: bool,
+    pub model_installed: bool,
+    pub model_verified: bool,
+    pub test_passed: bool,
+    pub download_in_progress: bool,
+    pub model_name: &'static str,
+    pub model_bytes: u64,
 }
 
 impl Default for DictationStatus {
@@ -21,6 +29,13 @@ impl Default for DictationStatus {
             is_listening: false,
             is_downloading: false,
             error: Some("本地语音输入未编译（STT stub）".into()),
+            recording: false,
+            model_installed: false,
+            model_verified: false,
+            test_passed: false,
+            download_in_progress: false,
+            model_name: "",
+            model_bytes: 0,
         }
     }
 }
@@ -32,26 +47,60 @@ pub struct DownloadProgress {
 }
 
 #[derive(Debug)]
-pub struct Dictation;
+pub struct Dictation {
+    status: Mutex<DictationStatus>,
+}
 
 impl Dictation {
-    pub fn new() -> Result<Self, String> {
-        Err("STT not available (stub build)".into())
+    pub fn new() -> Self {
+        Self {
+            status: Mutex::new(DictationStatus::default()),
+        }
     }
 
     pub fn status(&self) -> DictationStatus {
-        DictationStatus::default()
+        self.status.lock().unwrap().clone()
     }
 
-    pub fn start(&mut self) -> Result<(), String> {
+    pub fn start(&self) -> Result<(), String> {
+        Err("STT not available (stub)".into())
+    }
+
+    pub fn stop(&self) {}
+
+    pub fn transcribe(&self) -> Result<String, String> {
         Err("STT not available".into())
     }
 
-    pub fn stop(&mut self) {
+    pub fn stop_and_transcribe(&self) -> Result<String, String> {
+        Err("STT not available".into())
     }
 
-    pub fn transcribe(&mut self) -> Result<String, String> {
+    pub fn install_default_model_with_progress<F>(&self, _on_progress: F) -> Result<(), String>
+    where
+        F: Fn(DownloadProgress) + Send + 'static,
+    {
         Err("STT not available".into())
+    }
+
+    pub fn verify_default_model(&self) -> Result<(), String> {
+        Err("STT not available".into())
+    }
+
+    pub fn cancel(&self) {}
+
+    pub fn cancel_model_download(&self) {}
+
+    pub fn mark_test_passed(&self) -> Result<(), String> {
+        Err("STT not available".into())
+    }
+
+    pub fn delete_default_model(&self) -> Result<(), String> {
+        Err("STT not available".into())
+    }
+
+    pub fn input_level(&self) -> f32 {
+        0.0
     }
 
     pub fn download_progress(&self) -> DownloadProgress {
