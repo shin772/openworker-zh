@@ -5,9 +5,15 @@ import zhCN from './zh-CN.json';
 
 const DICT: Record<string, string> = zhCN;
 
-// 规范化：去首尾空格、多个空格合并为一个
+// 规范化：去首尾空格、多个空格合并为一个；弯引号归一为 ASCII 引号
+// （源码 JSX 常用 &rsquo;/&ldquo; 等 HTML 实体，渲染后是 U+2019/U+201C/U+201D，
+//   词表 key 统一用 ASCII 引号，这里归一化后即可精确匹配）
 function normalize(s: string): string {
-  return s.replace(/\s+/g, ' ').trim();
+  return s
+    .replace(/\s+/g, ' ')
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/[\u2018\u2019]/g, "'")
+    .trim();
 }
 
 function translateNode(node: Text) {
