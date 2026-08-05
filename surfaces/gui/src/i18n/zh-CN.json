@@ -473,5 +473,9 @@
   "What it can do — verified from its manifest": "能力说明——已从其清单验证",
   "What should we produce?": "我们应该产出什么？",
   "Working now": "正在工作",
-  "Workspace": "工作区"
+  "Workspace": "工作区",
+  "Auto": "自动",
+  "Longer lists collapse behind \"Show more\". Applies per coworker and per project.": "更长的列表折叠在“显示更多”后面。按协作助手和项目分别生效。",
+  "A small meter: showing how full the model's context window is. Turn it off to show this session's token total instead; either way the full breakdown is one click away.": "一个小指示条：显示模型上下文窗口的占用程度。关闭后改为显示此会话的令牌总量；无论哪种方式，完整明细都只需一次点击即可查看。",
+  "Each conversation gets its own folder under this location. Existing conversations keep their current folder; you can grant access to more folders inside any conversation.": "每个会话在此位置下有独立文件夹。已有会话保留其当前文件夹；你可以在任意会话内授权访问更多文件夹。"
 }

@@ -102,4 +102,14 @@ if (typeof document !== 'undefined') {
     attributes: true,
     attributeFilter: ['placeholder', 'aria-label', 'title'],
   });
+
+  // 兜底轮询：React 异步/重渲染会以 characterData 更新已有文本节点，
+  // MutationObserver 观察不到（无 characterData 监听），用轮询补漏。
+  let polls = 0;
+  const MAX_POLLS = 20;
+  const pollTimer = setInterval(() => {
+    walkAndTranslate(document.body);
+    polls += 1;
+    if (polls >= MAX_POLLS) clearInterval(pollTimer);
+  }, 3000);
 }
